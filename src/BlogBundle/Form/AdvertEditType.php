@@ -1,5 +1,5 @@
 <?php
-// src/OC/PlatformBundle/Form/AdvertEditType.php
+
 
 namespace BlogBundle\Form;
 

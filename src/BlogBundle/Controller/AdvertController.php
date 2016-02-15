@@ -101,19 +101,20 @@ class AdvertController extends Controller
       throw new NotFoundHttpException("L'annonce d'id ".$id." n'existe pas.");
     }
 
-   $form = $this->createForm(AdvertEditType::class, $advert);
+   $form = $this->createForm(new AdvertEditType(), $advert);
 
-    /* if ($form->handleRequest($request)->isValid()) {
+
+    if ($form->handleRequest($request)->isValid()) {
       // Inutile de persister ici, Doctrine connait déjà notre annonce
       $em->flush();
 
       $request->getSession()->getFlashBag()->add('notice', 'Annonce bien modifiée.');
 
       return $this->redirect($this->generateUrl('blog_view', array('id' => $advert->getId())));
-    }*/
+    }
 
     return $this->render('BlogBundle:Advert:edit.html.twig', array(
-      /*'form'   => $form->createView(),*/
+      'form'   => $form->createView(),
       'advert' => $advert // Je passe également l'annonce à la vue si jamais elle veut l'afficher
     ));
   }
