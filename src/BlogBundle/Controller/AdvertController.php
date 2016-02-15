@@ -5,6 +5,7 @@ namespace BlogBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use BlogBundle\Entity\Advert;
+use BlogBundle\Entity\Image;
 use BlogBundle\Form\AdvertType;
 use BlogBundle\Form\AdvertEditType;
 
@@ -73,6 +74,7 @@ class AdvertController extends Controller
     $form = $this->createForm(new AdvertType(), $advert);
 
     if ($form->handleRequest($request)->isValid()) {
+      $advert->getImage()->upload();
       $em = $this->getDoctrine()->getManager();
       $em->persist($advert);
       $em->flush();
@@ -103,17 +105,17 @@ class AdvertController extends Controller
 
    $form = $this->createForm(AdvertEditType::class, $advert);
 
-    /* if ($form->handleRequest($request)->isValid()) {
+    if ($form->handleRequest($request)->isValid()) {
       // Inutile de persister ici, Doctrine connait déjà notre annonce
       $em->flush();
 
       $request->getSession()->getFlashBag()->add('notice', 'Annonce bien modifiée.');
 
       return $this->redirect($this->generateUrl('blog_view', array('id' => $advert->getId())));
-    }*/
+    }
 
     return $this->render('BlogBundle:Advert:edit.html.twig', array(
-      /*'form'   => $form->createView(),*/
+      'form'   => $form->createView(),
       'advert' => $advert // Je passe également l'annonce à la vue si jamais elle veut l'afficher
     ));
   }
