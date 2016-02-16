@@ -3,7 +3,7 @@ namespace UserBundle\Entity;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Doctrine\ORM\Mapping as ORM;
 /**
- * @ORM\Table(name="lpdw_user")
+ * @ORM\Table(name="user")
  * @ORM\Entity(repositoryClass="UserBundle\Entity\UserRepository")
  */
 class User implements UserInterface, \Serializable

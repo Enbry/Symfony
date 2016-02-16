@@ -5,44 +5,63 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <title>{% block title %}Blog{% endblock %}</title>
+  {% stylesheets 'bundles/blog/css/materialize.css' filter='cssrewrite' %}
+              <link rel="stylesheet" href="{{ asset_url }}" />
+  {% endstylesheets %}
 
-  {% block stylesheets %}
-    {# On charge le CSS de bootstrap depuis le site directement #}
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.5/css/materialize.min.css">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  {% endblock %}
 </head>
 
 <body>
 
   <nav>
   <div class="nav-wrapper">
-    <a href="#!" class="brand-logo">Logo</a>
+    <a href="#!" class="brand-logo">BLOG</a>
     <ul class="right hide-on-med-and-down">
       <li><a href="{{ path('blog_home') }}">Accueil</a></li>
       <li><a href="{{ path('blog_articles') }}">Articles</a></li>
       <li><a href="{{ path('blog_categories') }}">Catégories</a></li>
+      {% if app.user %}
+      <li><a href="{{ path('logout') }}">DÉCONNEXION</a></li>
+      {% else %}
       <li><a href="{{ path('login') }}">CONNEXION</a></li>
+      {% endif %}
+
     </ul>
 
   </div>
 </nav>
+<div class="row">
+  {% if app.user %}
+    <div class="col s3">
+      <div class="divider"></div>
+      <div class="section">
+        <h5><a href="{{ path('blog_articles') }}">ANNONCES</a></h5>
+      </div>
+    <div class="divider"></div>
+    <div class="section">
+      <h5><a href="{{ path('blog_categories') }}">CATÉGORIES</a></h5>
+    </div>
+    <div class="divider"></div>
+    <div class="section">
+      <h5><a href="{{ path('blog_tags') }}">TAGS</a></h5>
+    </div>
+    </div>
+  {% endif %}
 
-    <div class="row">
+    <div class="col s9">
 
-      <div id="content" class="col-md-9">
         {% block body %}
         {% endblock %}
-      </div>
     </div>
 
-    <hr>
+</div>
+
 
     <footer class="page-footer">
       <div class="container footer-copyright">
 
             Noémie Brocheray © {{ 'now'|date('Y') }}
-          
+
 
           </div>
 

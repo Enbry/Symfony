@@ -1,5 +1,4 @@
 <?php
-// src/OC/PlatformBundle/Form/CategoryType.php
 
 namespace BlogBundle\Form;
 

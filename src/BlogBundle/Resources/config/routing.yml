@@ -20,6 +20,12 @@ blog_view:
     requirements:
         id: \d+
 
+blog_category:
+    path:      /category/{id}
+    defaults:  { _controller: BlogBundle:Advert:viewCategory }
+    requirements:
+        id: \d+
+
 blog_categories:
     path:      /categories/{page}
     defaults:
@@ -27,25 +33,44 @@ blog_categories:
         page:        1
     requirements:
         id: \d*
-
-blog_category:
-    path:      /category/{id}
-    defaults:  { _controller: BlogBundle:Advert:category }
+blog_tags:
+    path:      /tags/{page}
+    defaults:
+        _controller: BlogBundle:Advert:listTag
+        page:        1
     requirements:
-        id: \d+
+        id: \d*
 
 blog_add:
-    path:      /add
+    path:      admin/add
     defaults:  { _controller: BlogBundle:Advert:add }
 
 blog_edit:
-    path:      /edit/{id}
+    path:      admin/edit/{id}
     defaults:  { _controller: BlogBundle:Advert:edit }
     requirements:
         id: \d+
 
 blog_delete:
-    path:      /delete/{id}
+    path:      admin/delete/{id}
     defaults:  { _controller: BlogBundle:Advert:delete }
+    requirements:
+        id: \d+
+
+category_edit:
+    path:      admin/category/edit/{id}
+    defaults:  { _controller: BlogBundle:Advert:editCategory }
+    requirements:
+        id: \d+
+
+category_delete:
+    path:      admin/category/delete/{id}
+    defaults:  { _controller: BlogBundle:Advert:deleteCategory }
+    requirements:
+        id: \d+
+
+tag_delete:
+    path:      admin/tag/delete/{id}
+    defaults:  { _controller: BlogBundle:Advert:deleteTag }
     requirements:
         id: \d+

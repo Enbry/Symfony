@@ -1,5 +1,4 @@
 <?php
-// src/OC/PlatformBundle/Entity/Category.php
 
 namespace BlogBundle\Entity;
 
@@ -23,8 +22,22 @@ class Category
    */
   private $name;
 
+  /**
+   * @ORM\ManyToOne(targetEntity="BlogBundle\Entity\Advert", inversedBy="categories")
+   */
+  private $advert;
 
-  // Getters et setters
+  /**
+   * @ORM\Column(name="published", type="boolean")
+   */
+  private $published = true;
+
+
+  public function __construct()
+  {
+
+    $this->adverts = new ArrayCollection();
+  }
 
     /**
      * Get id
@@ -58,5 +71,34 @@ class Category
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * Get Advert
+     *
+     * @return string
+     */
+
+    public function getAdverts()
+    {
+      return $this->advert;
+    }
+
+    /**
+     * @param boolean $published
+     * @return Category
+     */
+    public function setPublished($published)
+    {
+      $this->published = $published;
+      return $this;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getPublished()
+    {
+      return $this->published;
     }
 }

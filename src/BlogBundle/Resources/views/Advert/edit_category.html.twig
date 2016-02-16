@@ -1,0 +1,30 @@
+{% extends "BlogBundle::layout.html.twig" %}
+
+{% block title %}
+  Modifier une catégorie - {{ parent() }}
+{% endblock %}
+
+{% block blog_body %}
+{% if app.user %}
+  <h2>Modifier une catégorie</h2>
+
+  {{ include("BlogBundle:Advert:form.html.twig") }}
+
+
+
+  <p>
+    <a href="{{ path('blog_categories', {'id': category.id}) }}" class="btn btn-default">
+      <i class="glyphicon glyphicon-chevron-left"></i>
+      Retour à l'annonce
+    </a>
+  </p>
+  {% else %}
+  <p>Vous n'avez pas les droits nécessaires</p>
+  <p>
+    <a href="{{ path('blog_categories', {'id': category.id}) }}" class="btn btn-default">
+      <i class="glyphicon glyphicon-chevron-left"></i>
+      Retour à l'annonce
+    </a>
+  </p>
+  {% endif %}
+{% endblock %}

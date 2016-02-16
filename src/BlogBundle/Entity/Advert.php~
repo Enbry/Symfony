@@ -1,5 +1,4 @@
 <?php
-// src/OC/PlatformBundle/Entity/Advert.php
 
 namespace BlogBundle\Entity;
 
@@ -45,7 +44,7 @@ class Advert
    */
   private $published = true;
 
-  
+
 
   /**
    * @ORM\ManyToMany(targetEntity="BlogBundle\Entity\Category", cascade={"persist"})

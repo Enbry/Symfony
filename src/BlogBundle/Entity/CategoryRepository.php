@@ -1,5 +1,4 @@
 <?php
-// src/OC/PlatformBundle/Entity/AdvertRepository.php
 
 namespace BlogBundle\Entity;
 
@@ -12,8 +11,6 @@ class CategoryRepository extends EntityRepository
   {
     $query = $this->createQueryBuilder('a')
 
-
-      ->addSelect('a')
       ->getQuery()
     ;
 
@@ -29,5 +26,12 @@ class CategoryRepository extends EntityRepository
     return new Paginator($query, true);
   }
 
-
+  public function getPublishedQueryBuilder()
+  {
+    return $this
+      ->createQueryBuilder('a')
+      ->where('a.published = :published')
+      ->setParameter('published', true)
+    ;
+  }
 }

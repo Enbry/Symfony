@@ -1,6 +1,6 @@
 user:
     resource: "@UserBundle/Resources/config/routing.yml"
-    prefix:   /
+    prefix:   /admin
 
 blog:
     resource: "@BlogBundle/Resources/config/routing.yml"
@@ -11,8 +11,7 @@ login:
     defaults:  { _controller: UserBundle:Security:login }
 
 login_check:
-    pattern: /login_check
-    defaults: { _controller: UserBundle:Security:loginCheck }
+    pattern:   /login_check
 
 logout:
     pattern:   /logout

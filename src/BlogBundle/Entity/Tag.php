@@ -1,13 +1,14 @@
 <?php
-// src/OC/PlatformBundle/Entity/Category.php
 
 namespace BlogBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="BlogBundle\Entity\TagRepository")
+ * @ORM\HasLifecycleCallbacks()
  */
+
 class Tag
 {
   /**
@@ -56,5 +57,10 @@ class Tag
     public function getName()
     {
         return $this->name;
+    }
+
+    public function getTags()
+    {
+      return $this->tags;
     }
 }

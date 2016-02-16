@@ -1,5 +1,4 @@
 <?php
-// src/OC/PlatformBundle/Entity/Advert.php
 
 namespace BlogBundle\Entity;
 
@@ -47,7 +46,7 @@ class Advert
 
 
   /**
-   * @ORM\ManyToMany(targetEntity="BlogBundle\Entity\Category", cascade={"persist"})
+   * @ORM\OneToMany(targetEntity="BlogBundle\Entity\Category", mappedBy="advert")
    */
   private $categories;
 
