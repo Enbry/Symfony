@@ -15,21 +15,33 @@
     {% for category in advert.categories %}
       {{ category.name }}{% if not loop.last %}, {% endif %}
     {% endfor %}
+
   </p>
 {% endif %}
 
+{% if not advert.tags.empty %}
+<p>
+  Tag de l'annonce :
+  {% for tag in advert.tags %}
+    {{ tag.name }}{% if not loop.last %}, {% endif %}
+  {% endfor %}
+
+</p>
+{% endif %}
+
+
+
   <div class="well">
     {{ advert.content }}
-    {% if advert.image is not null %}
-  <img src="{{ advert.image.url }}" alt="{{ advert.image.alt }}">
-{% endif %}
+
   </div>
 
   <p>
-    <a href="{{ path('blog_home') }}" class="btn btn-default">
+    <a href="{{ path('blog_articles') }}" class="btn btn-default">
       <i class="glyphicon glyphicon-chevron-left"></i>
       Retour à la liste
     </a>
+    {% if app.user %}
     <a href="{{ path('blog_edit', {'id': advert.id}) }}" class="btn btn-default">
       <i class="glyphicon glyphicon-edit"></i>
       Modifier l'annonce
@@ -39,5 +51,5 @@
       Supprimer l'annonce
     </a>
   </p>
-
+{% endif %}
 {% endblock %}

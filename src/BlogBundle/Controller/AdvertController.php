@@ -4,10 +4,17 @@ namespace BlogBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use BlogBundle\Entity\Advert;
 use BlogBundle\Entity\Image;
 use BlogBundle\Form\AdvertType;
 use BlogBundle\Form\AdvertEditType;
+use BlogBundle\Entity\Category;
+use BlogBundle\Form\CategoryType;
+use BlogBundle\Form\CategoryEditType;
+use BlogBundle\Entity\Tag;
+
 
 
 class AdvertController extends Controller
@@ -18,27 +25,54 @@ class AdvertController extends Controller
       throw $this->createNotFoundException("La page ".$page." n'existe pas.");
     }
 
-    // Ici je fixe le nombre d'annonces par page à 3
-    // Mais bien sûr il faudrait utiliser un paramètre, et y accéder via $this->container->getParameter('nb_per_page')
     $nbPerPage = 3;
 
-    // On récupère notre objet Paginator
     $listAdverts = $this->getDoctrine()
       ->getManager()
       ->getRepository('BlogBundle:Advert')
       ->getAdverts($page, $nbPerPage)
     ;
 
-    // On calcule le nombre total de pages grâce au count($listAdverts) qui retourne le nombre total d'annonces
     $nbPages = ceil(count($listAdverts)/$nbPerPage);
 
-    // Si la page n'existe pas, on retourne une 404
     if ($page > $nbPages) {
       throw $this->createNotFoundException("La page ".$page." n'existe pas.");
     }
 
-    // On donne toutes les informations nécessaires à la vue
+
     return $this->render('BlogBundle:Advert:index.html.twig', array(
+      'listAdverts' => $listAdverts,
+      'nbPages'     => $nbPages,
+      'page'        => $page
+    ));
+  }
+
+  public function listAction($page)
+  {
+    if ($page < 1) {
+      throw $this->createNotFoundException("La page ".$page." n'existe pas.");
+    }
+
+
+    $nbPerPage = 10;
+
+
+    $listAdverts = $this->getDoctrine()
+      ->getManager()
+      ->getRepository('BlogBundle:Advert')
+      ->getAdverts($page, $nbPerPage)
+    ;
+
+
+    $nbPages = ceil(count($listAdverts)/$nbPerPage);
+
+
+    if ($page > $nbPages) {
+      throw $this->createNotFoundException("La page ".$page." n'existe pas.");
+    }
+
+
+    return $this->render('BlogBundle:Advert:articles.html.twig', array(
       'listAdverts' => $listAdverts,
       'nbPages'     => $nbPages,
       'page'        => $page
@@ -47,29 +81,130 @@ class AdvertController extends Controller
 
   public function viewAction($id)
   {
-    // On récupère l'EntityManager
+
     $em = $this->getDoctrine()->getManager();
 
-    // Pour récupérer une annonce unique : on utilise find()
+
     $advert = $em->getRepository('BlogBundle:Advert')->find($id);
 
-    // On vérifie que l'annonce avec cet id existe bien
+
     if ($advert === null) {
       throw $this->createNotFoundException("L'annonce d'id ".$id." n'existe pas.");
     }
 
-    // On récupère la liste des advertTag pour l'annonce $advert
-    $listAdvertTags = $em->getRepository('BlogBundle:AdvertTag')->findByAdvert($advert);
 
-    // Puis modifiez la ligne du render comme ceci, pour prendre en compte les variables :
     return $this->render('BlogBundle:Advert:view.html.twig', array(
-      'advert'           => $advert,
-      'listAdvertTags' => $listAdvertTags,
+      'advert'           => $advert
     ));
   }
 
+  public function viewCategoryAction($id)
+  {
+
+    $em = $this->getDoctrine()->getManager();
+
+
+    $category = $em->getRepository('BlogBundle:Category')->find($id);
+
+
+    if ($category === null) {
+      throw $this->createNotFoundException("L'annonce d'id ".$id." n'existe pas.");
+    }
+
+
+    return $this->render('BlogBundle:Advert:category.html.twig', array(
+      'category'           => $category
+    ));
+  }
+
+  public function listCategoryAction($page)
+  {
+    if ($page < 1) {
+      throw $this->createNotFoundException("La page ".$page." n'existe pas.");
+    }
+
+
+    $nbPerPage = 10;
+
+
+    $listCategories = $this->getDoctrine()
+      ->getManager()
+      ->getRepository('BlogBundle:Category')
+      ->getCategories($page, $nbPerPage)
+    ;
+
+
+    $nbPages = ceil(count($listCategories)/$nbPerPage);
+
+
+    if ($page > $nbPages) {
+      throw $this->createNotFoundException("La page ".$page." n'existe pas.");
+    }
+
+
+    return $this->render('BlogBundle:Advert:categories.html.twig', array(
+      'listCategories' => $listCategories,
+      'nbPages'     => $nbPages,
+      'page'        => $page
+    ));
+  }
+
+  public function listTagAction($page)
+  {
+    if ($page < 1) {
+      throw $this->createNotFoundException("La page ".$page." n'existe pas.");
+    }
+
+
+    $nbPerPage = 10;
+
+
+    $listTags = $this->getDoctrine()
+      ->getManager()
+      ->getRepository('BlogBundle:Tag')
+      ->getTags($page, $nbPerPage)
+    ;
+
+
+    $nbPages = ceil(count($listTags)/$nbPerPage);
+
+
+    if ($page > $nbPages) {
+      throw $this->createNotFoundException("La page ".$page." n'existe pas.");
+    }
+
+
+    return $this->render('BlogBundle:Advert:tags.html.twig', array(
+      'listTags' => $listTags,
+      'nbPages'     => $nbPages,
+      'page'        => $page
+    ));
+  }
+
+  public function CategoryAction($id)
+  {
+
+    $em = $this->getDoctrine()->getManager();
+
+
+    $category = $em->getRepository('BlogBundle:Category')->find($id);
+
+
+    if ($category === null) {
+      throw $this->createNotFoundException("La catégorie d'id ".$id." n'existe pas.");
+    }
+
+
+    return $this->render('BlogBundle:Advert:category.html.twig', array(
+      'category'           => $category
+    ));
+  }
+
+
+
   public function addAction(Request $request)
   {
+
     $advert = new Advert();
     $form = $this->createForm(new AdvertType(), $advert);
 
@@ -84,9 +219,29 @@ class AdvertController extends Controller
       return $this->redirect($this->generateUrl('blog_view', array('id' => $advert->getId())));
     }
 
-    // À ce stade :
-    // - Soit la requête est de type GET, donc le visiteur vient d'arriver sur la page et veut voir le formulaire
-    // - Soit la requête est de type POST, mais le formulaire n'est pas valide, donc on l'affiche de nouveau
+
+    return $this->render('BlogBundle:Advert:add.html.twig', array(
+      'form' => $form->createView(),
+    ));
+  }
+
+  public function addCategoryAction(Request $request)
+  {
+
+    $category = new Category();
+    $form = $this->createForm(new CategoryType(), $category);
+
+    if ($form->handleRequest($request)->isValid()) {
+      $em = $this->getDoctrine()->getManager();
+      $em->persist($category);
+      $em->flush();
+
+      $request->getSession()->getFlashBag()->add('notice', 'Catégorie bien enregistrée.');
+
+      return $this->redirect($this->generateUrl('blog_categories', array('id' => $categories->getId())));
+    }
+
+
     return $this->render('BlogBundle:Advert:add.html.twig', array(
       'form' => $form->createView(),
     ));
@@ -96,7 +251,7 @@ class AdvertController extends Controller
   {
     $em = $this->getDoctrine()->getManager();
 
-    // On récupère l'annonce $id
+
     $advert = $em->getRepository('BlogBundle:Advert')->find($id);
 
     if (null === $advert) {
@@ -113,7 +268,7 @@ class AdvertController extends Controller
 =======
 >>>>>>> origin/master
     if ($form->handleRequest($request)->isValid()) {
-      // Inutile de persister ici, Doctrine connait déjà notre annonce
+
       $em->flush();
 
       $request->getSession()->getFlashBag()->add('notice', 'Annonce bien modifiée.');
@@ -123,7 +278,36 @@ class AdvertController extends Controller
 
     return $this->render('BlogBundle:Advert:edit.html.twig', array(
       'form'   => $form->createView(),
-      'advert' => $advert // Je passe également l'annonce à la vue si jamais elle veut l'afficher
+      'advert' => $advert
+    ));
+  }
+
+  public function editCategoryAction($id, Request $request)
+  {
+    $em = $this->getDoctrine()->getManager();
+
+
+    $category = $em->getRepository('BlogBundle:Category')->find($id);
+
+    if (null === $category) {
+      throw new NotFoundHttpException("La catégorie d'id ".$id." n'existe pas.");
+    }
+
+   $form = $this->createForm(new CategoryEditType(), $category);
+
+
+    if ($form->handleRequest($request)->isValid()) {
+
+      $em->flush();
+
+      $request->getSession()->getFlashBag()->add('notice', 'Catégorie bien modifiée.');
+
+      return $this->redirect($this->generateUrl('blog_categories', array('id' => $category->getId())));
+    }
+
+    return $this->render('BlogBundle:Advert:edit_category.html.twig', array(
+      'form'   => $form->createView(),
+      'category' => $category
     ));
   }
 
@@ -131,15 +315,14 @@ class AdvertController extends Controller
   {
     $em = $this->getDoctrine()->getManager();
 
-    // On récupère l'annonce $id
+
     $advert = $em->getRepository('BlogBundle:Advert')->find($id);
 
     if (null === $advert) {
       throw new NotFoundHttpException("L'annonce d'id ".$id." n'existe pas.");
     }
 
-    // On crée un formulaire vide, qui ne contiendra que le champ CSRF
-    // Cela permet de protéger la suppression d'annonce contre cette faille
+
     $form = $this->createFormBuilder()->getForm();
 
     if ($form->handleRequest($request)->isValid()) {
@@ -151,9 +334,63 @@ class AdvertController extends Controller
       return $this->redirect($this->generateUrl('blog_home'));
     }
 
-    // Si la requête est en GET, on affiche une page de confirmation avant de supprimer
+
     return $this->render('BlogBundle:Advert:delete.html.twig', array(
       'advert' => $advert,
+      'form'   => $form->createView()
+    ));
+  }
+
+  public function deleteTagAction($id, Request $request)
+  {
+    $em = $this->getDoctrine()->getManager();
+
+
+    $tag = $em->getRepository('BlogBundle:Tag')->find($id);
+
+    if (null === $tag) {
+      throw new NotFoundHttpException("Le tag d'id ".$id." n'existe pas.");
+    }
+
+
+      $em->remove($tag);
+      $em->flush();
+
+      $request->getSession()->getFlashBag()->add('info', "L'annonce a bien été supprimée.");
+
+      return $this->redirect($this->generateUrl('blog_tags'));
+
+
+
+    return $this->render('BlogBundle:Advert:deletetag.html.twig', array(
+      'tag' => $tag,
+      'form'   => $form->createView()
+    ));
+  }
+
+  public function deleteCategoryAction($id, Request $request)
+  {
+    $em = $this->getDoctrine()->getManager();
+
+
+    $category = $em->getRepository('BlogBundle:Category')->find($id);
+
+    if (null === $category) {
+      throw new NotFoundHttpException("La catégorie d'id ".$id." n'existe pas.");
+    }
+
+
+      $em->remove($category);
+      $em->flush();
+
+      $request->getSession()->getFlashBag()->add('info', "L'annonce a bien été supprimée.");
+
+      return $this->redirect($this->generateUrl('blog_categories'));
+
+
+
+    return $this->render('BlogBundle:Advert:deletecategory.html.twig', array(
+      'category' => $category,
       'form'   => $form->createView()
     ));
   }
@@ -164,10 +401,10 @@ class AdvertController extends Controller
       ->getManager()
       ->getRepository('BlogBundle:Advert')
       ->findBy(
-        array(),                 // Pas de critère
-        array('date' => 'desc'), // On trie par date décroissante
-        $limit,                  // On sélectionne $limit annonces
-        0                        // À partir du premier
+        array(),
+        array('date' => 'desc'),
+        $limit,
+        0
     );
 
     return $this->render('BlogBundle:Advert:menu.html.twig', array(

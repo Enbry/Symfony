@@ -1,5 +1,4 @@
 <?php
-// src/OC/PlatformBundle/Entity/AdvertRepository.php
 
 namespace BlogBundle\Entity;
 
@@ -11,8 +10,7 @@ class AdvertRepository extends EntityRepository
   public function getAdverts($page, $nbPerPage)
   {
     $query = $this->createQueryBuilder('a')
-      ->leftJoin('a.image', 'i')
-      ->addSelect('i')
+
       ->leftJoin('a.categories', 'c')
       ->addSelect('c')
       ->orderBy('a.date', 'DESC')
@@ -20,15 +18,34 @@ class AdvertRepository extends EntityRepository
     ;
 
     $query
-      // On définit l'annonce à partir de laquelle commencer la liste
+
       ->setFirstResult(($page-1) * $nbPerPage)
-      // Ainsi que le nombre d'annonce à afficher sur une page
       ->setMaxResults($nbPerPage)
     ;
 
-    // Enfin, on retourne l'objet Paginator correspondant à la requête construite
-    // (n'oubliez pas le use correspondant en début de fichier)
+
     return new Paginator($query, true);
+  }
+
+  public function getAdCategories($category)
+  {
+    $query = $this->createQueryBuilder('a')
+
+      ->leftJoin('a.categories', 'c')
+      ->setParameter('category', $category)
+      ->where('c', category)
+
+      ->addSelect('c')
+      ->orderBy('a.date', 'DESC')
+      ->getQuery()
+    ;
+
+    $query
+      ->setFirstResult(($page-1) * $nbPerPage)
+      ->setMaxResults($nbPerPage)
+    ;
+
+    return $query;
   }
 
   public function getPublishedQueryBuilder()

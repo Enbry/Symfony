@@ -1,0 +1,41 @@
+{% extends "BlogBundle::layout.html.twig" %}
+
+{% block title %}
+  Catégories - {{ parent() }}
+{% endblock %}
+
+{% block blog_body %}
+
+  <h2>Liste des tags</h2>
+
+  <ul>
+    {% for tag in listTags %}
+      <li>
+          {{ tag.name }}
+        <p>
+
+          {% if app.user %}
+          
+          <a href="{{ path('tag_delete', {'id': tag.id}) }}" class="btn btn-danger">
+            <i class="glyphicon glyphicon-trash"></i>
+            Supprimer le tag
+          </a>
+          {% endif %}
+        </p>
+
+      </li>
+    {% else %}
+      <li>Pas (encore !) de tags</li>
+    {% endfor %}
+  </ul>
+
+  <ul class="pagination">
+  {# On utilise la fonction range(a, b) qui crée un tableau de valeurs entre a et b #}
+  {% for p in range(1, nbPages) %}
+    <li{% if p == page %} class="active"{% endif %}>
+      <a href="{{ path('blog_tags', {'page': p}) }}">{{ p }}</a>
+    </li>
+  {% endfor %}
+</ul>
+
+{% endblock %}

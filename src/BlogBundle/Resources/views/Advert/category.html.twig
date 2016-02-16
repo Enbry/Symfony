@@ -1,0 +1,32 @@
+{% extends "BlogBundle::layout.html.twig" %}
+
+
+
+{% block blog_body %}
+
+  <h2>{{ category.name }}</h2>
+
+
+  {% if not category.adverts is not empty%}
+  <p>
+    Articles de cette catégorie :
+    {% for advert in category.adverts %}
+      {{ advert.title }}{% if not loop.last %}, {% endif %}
+    {% endfor %}
+
+  </p>
+{% endif %}
+
+
+
+
+
+
+  <p>
+    <a href="{{ path('blog_categories') }}" class="btn btn-default">
+      <i class="glyphicon glyphicon-chevron-left"></i>
+      Retour à la liste
+    </a>
+
+  </p>
+{% endblock %}

@@ -1,5 +1,4 @@
 <?php
-// src/OC/PlatformBundle/DependencyInjection/OCPlatformExtension.php
 
 namespace BlogBundle\DependencyInjection;
 

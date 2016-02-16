@@ -5,57 +5,70 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <title>{% block title %}Blog{% endblock %}</title>
+  {% stylesheets 'bundles/blog/css/materialize.css' filter='cssrewrite' %}
+              <link rel="stylesheet" href="{{ asset_url }}" />
+  {% endstylesheets %}
 
-  {% block stylesheets %}
-    {# On charge le CSS de bootstrap depuis le site directement #}
-    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
-  {% endblock %}
 </head>
 
 <body>
-  <div class="container">
-    <div id="header" class="jumbotron">
-      <h1>Ma plateforme d'annonces</h1>
-      <p>
-        Ce projet est propulsé par Symfony2,
-        et construit grâce au MOOC OpenClassrooms et SensioLabs.
-      </p>
-      <p>
-        <a class="btn btn-primary btn-lg" href="http://fr.openclassrooms.com/informatique/cours/developpez-votre-site-web-avec-le-framework-symfony2">
-          Participer au MOOC »
-        </a>
-      </p>
-    </div>
 
-    <div class="row">
-      <div id="menu" class="col-md-3">
-        <h3>Les annonces</h3>
-        <ul class="nav nav-pills nav-stacked">
-          <li><a href="{{ path('blog_home') }}">Accueil</a></li>
-          <li><a href="{{ path('blog_add') }}">Ajouter une annonce</a></li>
-        </ul>
+  <nav>
+  <div class="nav-wrapper">
+    <a href="#!" class="brand-logo">BLOG</a>
+    <ul class="right hide-on-med-and-down">
+      <li><a href="{{ path('blog_home') }}">Accueil</a></li>
+      <li><a href="{{ path('blog_articles') }}">Articles</a></li>
+      <li><a href="{{ path('blog_categories') }}">Catégories</a></li>
+      {% if app.user %}
+      <li><a href="{{ path('logout') }}">DÉCONNEXION</a></li>
+      {% else %}
+      <li><a href="{{ path('login') }}">CONNEXION</a></li>
+      {% endif %}
 
-        <h4>Dernières annonces</h4>
-        {{ render(controller("BlogBundle:Advert:menu", {'limit': 3})) }}
+    </ul>
+
+  </div>
+</nav>
+<div class="row">
+  {% if app.user %}
+    <div class="col s3">
+      <div class="divider"></div>
+      <div class="section">
+        <h5><a href="{{ path('blog_articles') }}">ANNONCES</a></h5>
       </div>
-      <div id="content" class="col-md-9">
+    <div class="divider"></div>
+    <div class="section">
+      <h5><a href="{{ path('blog_categories') }}">CATÉGORIES</a></h5>
+    </div>
+    <div class="divider"></div>
+    <div class="section">
+      <h5><a href="{{ path('blog_tags') }}">TAGS</a></h5>
+    </div>
+    </div>
+  {% endif %}
+
+    <div class="col s9">
+
         {% block body %}
         {% endblock %}
-      </div>
     </div>
 
-    <hr>
+</div>
 
-    <footer>
-      <p>The sky's the limit © {{ 'now'|date('Y') }} and beyond.</p>
+
+    <footer class="page-footer">
+      <div class="container footer-copyright">
+
+            Noémie Brocheray © {{ 'now'|date('Y') }}
+
+
+          </div>
+
     </footer>
-  </div>
 
-  {% block javascripts %}
-    {# Ajoutez ces lignes JavaScript si vous comptez vous servir des fonctionnalités du bootstrap Twitter #}
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
-  {% endblock %}
+
+
 
 </body>
 </html>

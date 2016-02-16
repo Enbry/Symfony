@@ -2,13 +2,14 @@
 
 {% block body %}
 
-  <h2>Ajouter une annonce</h2>
+{% if app.user %}
+<li><a href="{{ path('blog_add') }}">Ajouter une annonce</a></li>
+
 
   {{ include("BlogBundle:Advert:form.html.twig") }}
 
-  <p>
-    Attention : cette annonce sera ajoutée directement
-    sur la page d'accueil après validation du formulaire.
-  </p>
+{% else %}
+<p>Vous n'avez pas les droits nécessaires</p>
+{% endif %}
 
 {% endblock %}

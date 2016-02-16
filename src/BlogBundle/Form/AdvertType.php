@@ -1,5 +1,4 @@
 <?php
-// src/OC/PlatformBundle/Form/AdvertType.php
 
 namespace BlogBundle\Form;
 
@@ -18,21 +17,24 @@ class AdvertType extends AbstractType
       ->add('title',     'text')
       ->add('author',    'text')
       ->add('content',   'textarea')
-      ->add('image',      new ImageType())
       ->add('categories', 'entity', array(
         'class'    => 'BlogBundle:Category',
         'property' => 'name',
         'multiple' => true,
-        'expanded' => false
+        'expanded' => true
       ))
-      ->add('save',      'submit')
+      ->add('tags', 'entity', array(
+        'class'    => 'BlogBundle:Tag',
+        'property' => 'name',
+        'multiple' => true,
+        'expanded' => true
+      ))
+      ->add('Enregistrer',      'submit')
     ;
 
-    // On ajoute une fonction qui va écouter l'évènement PRE_SET_DATA
     $builder->addEventListener(
       FormEvents::PRE_SET_DATA,
       function(FormEvent $event) {
-        // On récupère notre objet Advert sous-jacent
         $advert = $event->getData();
 
         if (null === $advert) {
