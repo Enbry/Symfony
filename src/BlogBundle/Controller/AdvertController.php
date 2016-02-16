@@ -106,7 +106,10 @@ class AdvertController extends Controller
    $form = $this->createForm(new AdvertEditType(), $advert);
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/master
 =======
 >>>>>>> origin/master
     if ($form->handleRequest($request)->isValid()) {
