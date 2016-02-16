@@ -5,6 +5,7 @@ namespace BlogBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use BlogBundle\Entity\Advert;
+use BlogBundle\Entity\Image;
 use BlogBundle\Form\AdvertType;
 use BlogBundle\Form\AdvertEditType;
 
@@ -73,6 +74,7 @@ class AdvertController extends Controller
     $form = $this->createForm(new AdvertType(), $advert);
 
     if ($form->handleRequest($request)->isValid()) {
+      $advert->getImage()->upload();
       $em = $this->getDoctrine()->getManager();
       $em->persist($advert);
       $em->flush();
@@ -103,7 +105,10 @@ class AdvertController extends Controller
 
    $form = $this->createForm(new AdvertEditType(), $advert);
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/master
     if ($form->handleRequest($request)->isValid()) {
       // Inutile de persister ici, Doctrine connait déjà notre annonce
       $em->flush();
