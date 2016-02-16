@@ -1,12 +1,12 @@
 <?php
-// src/OC/PlatformBundle/Entity/Skill.php
+// src/OC/PlatformBundle/Entity/Category.php
 
 namespace BlogBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="BlogBundle\Repository\TagRepository")
+ * @ORM\Entity
  */
 class Tag
 {

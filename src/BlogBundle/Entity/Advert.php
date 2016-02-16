@@ -45,10 +45,6 @@ class Advert
    */
   private $published = true;
 
-  /**
-   * @ORM\OneToOne(targetEntity="BlogBundle\Entity\Image", cascade={"persist", "remove"})
-   */
-  private $image;
 
   /**
    * @ORM\ManyToMany(targetEntity="BlogBundle\Entity\Category", cascade={"persist"})
@@ -56,27 +52,22 @@ class Advert
   private $categories;
 
   /**
-   * @ORM\OneToMany(targetEntity="BlogBundle\Entity\Application", mappedBy="advert")
+   * @ORM\ManyToMany(targetEntity="BlogBundle\Entity\Tag", cascade={"persist"})
    */
-  private $applications; // Notez le « s », une annonce est liée à plusieurs candidatures
+  private $tags;
+
 
   /**
    * @ORM\Column(name="updated_at", type="datetime", nullable=true)
    */
   private $updatedAt;
 
-  /**
-   * @ORM\Column(name="nb_applications", type="integer")
-   */
-  private $nbApplications = 0;
-
-
 
   public function __construct()
   {
     $this->date         = new \Datetime();
     $this->categories   = new ArrayCollection();
-    $this->applications = new ArrayCollection();
+    $this->tags = new ArrayCollection();
   }
 
   /**
@@ -177,24 +168,6 @@ class Advert
     return $this->published;
   }
 
-  /**
-   * @param Image $image
-   * @return Advert
-   */
-  public function setImage(Image $image = null)
-  {
-    $this->image = $image;
-    return $this;
-  }
-
-  /**
-   * @return Image
-   */
-  public function getImage()
-  {
-    return $this->image;
-  }
-
   public function addCategory(Category $category)
   {
     $this->categories[] = $category;
@@ -211,38 +184,22 @@ class Advert
     return $this->categories;
   }
 
-  /**
-   * @param Application $application
-   * @return Advert
-   */
-  public function addApplication(Application $application)
+  public function addTag(Tag $tag)
   {
-    $this->applications[] = $application;
-
-    // On lie l'annonce à la candidature
-    $application->setAdvert($this);
-
+    $this->tags[] = $tag;
     return $this;
   }
 
-  /**
-   * @param Application $application
-   */
-  public function removeApplication(Application $application)
+  public function removeTag(Tag $tag)
   {
-    $this->applications->removeElement($application);
-
-    // Et si notre relation était facultative (nullable=true, ce qui n'est pas notre cas ici attention) :
-    // $application->setAdvert(null);
+    $this->tags->removeElement($tag);
   }
 
-  /**
-   * @return ArrayCollection
-   */
-  public function getApplications()
+  public function getTags()
   {
-    return $this->applications;
+    return $this->tags;
   }
+
 
   /**
    * @ORM\PreUpdate
@@ -263,37 +220,6 @@ class Advert
     return $this->updatedAt;
   }
 
-  public function increaseApplication()
-  {
-    $this->nbApplications++;
-  }
 
-  public function decreaseApplication()
-  {
-    $this->nbApplications--;
-  }
 
-    /**
-     * Set nbApplications
-     *
-     * @param integer $nbApplications
-     *
-     * @return Advert
-     */
-    public function setNbApplications($nbApplications)
-    {
-        $this->nbApplications = $nbApplications;
-
-        return $this;
-    }
-
-    /**
-     * Get nbApplications
-     *
-     * @return integer
-     */
-    public function getNbApplications()
-    {
-        return $this->nbApplications;
-    }
 }

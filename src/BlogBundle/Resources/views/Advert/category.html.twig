@@ -1,15 +1,15 @@
 {% extends "BlogBundle::layout.html.twig" %}
 
 {% block title %}
-  Lecture d'une annonce - {{ parent() }}
+  <h2>{{ category.name }}</h2>
 {% endblock %}
 
 {% block blog_body %}
 
-  <h2>{{ advert.title }}</h2>
-  <i>Par {{ advert.author }}, le {{ advert.date|date('d/m/Y') }}</i>
 
-  {% if not advert.categories.empty %}
+
+
+  {% if not categories.advert.empty %}
   <p>
     Cette annonce est parue dans les catégories suivantes :
     {% for category in advert.categories %}
@@ -37,7 +37,7 @@
   </div>
 
   <p>
-    <a href="{{ path('blog_articles') }}" class="btn btn-default">
+    <a href="{{ path('blog_home') }}" class="btn btn-default">
       <i class="glyphicon glyphicon-chevron-left"></i>
       Retour à la liste
     </a>

@@ -6,15 +6,14 @@ namespace BlogBundle\Entity;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 
-class AdvertRepository extends EntityRepository
+class CategoryRepository extends EntityRepository
 {
-  public function getAdverts($page, $nbPerPage)
+  public function getCategories($page, $nbPerPage)
   {
     $query = $this->createQueryBuilder('a')
-      
-      ->leftJoin('a.categories', 'c')
-      ->addSelect('c')
-      ->orderBy('a.date', 'DESC')
+
+
+      ->addSelect('a')
       ->getQuery()
     ;
 
@@ -30,12 +29,5 @@ class AdvertRepository extends EntityRepository
     return new Paginator($query, true);
   }
 
-  public function getPublishedQueryBuilder()
-  {
-    return $this
-      ->createQueryBuilder('a')
-      ->where('a.published = :published')
-      ->setParameter('published', true)
-    ;
-  }
+
 }

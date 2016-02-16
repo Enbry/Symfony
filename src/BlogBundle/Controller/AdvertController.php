@@ -4,7 +4,10 @@ namespace BlogBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use BlogBundle\Entity\Advert;
+use BlogBundle\Entity\Category;
 use BlogBundle\Form\AdvertType;
 use BlogBundle\Form\AdvertEditType;
 
@@ -44,6 +47,39 @@ class AdvertController extends Controller
     ));
   }
 
+  public function listAction($page)
+  {
+    if ($page < 1) {
+      throw $this->createNotFoundException("La page ".$page." n'existe pas.");
+    }
+
+    // Ici je fixe le nombre d'annonces par page à 3
+    // Mais bien sûr il faudrait utiliser un paramètre, et y accéder via $this->container->getParameter('nb_per_page')
+    $nbPerPage = 10;
+
+    // On récupère notre objet Paginator
+    $listAdverts = $this->getDoctrine()
+      ->getManager()
+      ->getRepository('BlogBundle:Advert')
+      ->getAdverts($page, $nbPerPage)
+    ;
+
+    // On calcule le nombre total de pages grâce au count($listAdverts) qui retourne le nombre total d'annonces
+    $nbPages = ceil(count($listAdverts)/$nbPerPage);
+
+    // Si la page n'existe pas, on retourne une 404
+    if ($page > $nbPages) {
+      throw $this->createNotFoundException("La page ".$page." n'existe pas.");
+    }
+
+    // On donne toutes les informations nécessaires à la vue
+    return $this->render('BlogBundle:Advert:articles.html.twig', array(
+      'listAdverts' => $listAdverts,
+      'nbPages'     => $nbPages,
+      'page'        => $page
+    ));
+  }
+
   public function viewAction($id)
   {
     // On récupère l'EntityManager
@@ -57,18 +93,71 @@ class AdvertController extends Controller
       throw $this->createNotFoundException("L'annonce d'id ".$id." n'existe pas.");
     }
 
-    // On récupère la liste des advertTag pour l'annonce $advert
-    $listAdvertTags = $em->getRepository('BlogBundle:AdvertTag')->findByAdvert($advert);
-
     // Puis modifiez la ligne du render comme ceci, pour prendre en compte les variables :
     return $this->render('BlogBundle:Advert:view.html.twig', array(
-      'advert'           => $advert,
-      'listAdvertTags' => $listAdvertTags,
+      'advert'           => $advert
     ));
   }
 
+  public function listCategoryAction($page)
+  {
+    if ($page < 1) {
+      throw $this->createNotFoundException("La page ".$page." n'existe pas.");
+    }
+
+    // Ici je fixe le nombre d'annonces par page à 3
+    // Mais bien sûr il faudrait utiliser un paramètre, et y accéder via $this->container->getParameter('nb_per_page')
+    $nbPerPage = 10;
+
+    // On récupère notre objet Paginator
+    $listCategories = $this->getDoctrine()
+      ->getManager()
+      ->getRepository('BlogBundle:Category')
+      ->getCategories($page, $nbPerPage)
+    ;
+
+    // On calcule le nombre total de pages grâce au count($listAdverts) qui retourne le nombre total d'annonces
+    $nbPages = ceil(count($listCategories)/$nbPerPage);
+
+    // Si la page n'existe pas, on retourne une 404
+    if ($page > $nbPages) {
+      throw $this->createNotFoundException("La page ".$page." n'existe pas.");
+    }
+
+    // On donne toutes les informations nécessaires à la vue
+    return $this->render('BlogBundle:Advert:categories.html.twig', array(
+      'listCategories' => $listCategories,
+      'nbPages'     => $nbPages,
+      'page'        => $page
+    ));
+  }
+
+  public function categoryAction($id)
+  {
+    // On récupère l'EntityManager
+    $em = $this->getDoctrine()->getManager();
+
+    // Pour récupérer une annonce unique : on utilise find()
+    $category = $em->getRepository('BlogBundle:Category')->find($id);
+
+    // On vérifie que l'annonce avec cet id existe bien
+    if ($category === null) {
+      throw $this->createNotFoundException("La catégorie d'id ".$id." n'existe pas.");
+    }
+
+    // Puis modifiez la ligne du render comme ceci, pour prendre en compte les variables :
+    return $this->render('BlogBundle:Advert:category.html.twig', array(
+      'category'           => $category
+    ));
+  }
+
+  /**
+   * @Security("has_role('ROLE_AUTEUR')")
+   */
+
   public function addAction(Request $request)
   {
+
     $advert = new Advert();
     $form = $this->createForm(new AdvertType(), $advert);
 

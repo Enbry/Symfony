@@ -45,10 +45,7 @@ class Advert
    */
   private $published = true;
 
-  /**
-   * @ORM\OneToOne(targetEntity="BlogBundle\Entity\Image", cascade={"persist", "remove"})
-   */
-  private $image;
+  
 
   /**
    * @ORM\ManyToMany(targetEntity="BlogBundle\Entity\Category", cascade={"persist"})

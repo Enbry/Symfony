@@ -6,9 +6,31 @@ blog_home:
     requirements:
         page: \d*
 
+blog_articles:
+    path:      /articles/{page}
+    defaults:
+        _controller: BlogBundle:Advert:list
+        page:        1
+    requirements:
+        page: \d*
+
 blog_view:
-    path:      /advert/{id}
+    path:      /article/{id}
     defaults:  { _controller: BlogBundle:Advert:view }
+    requirements:
+        id: \d+
+
+blog_categories:
+    path:      /categories/{page}
+    defaults:
+        _controller: BlogBundle:Advert:listCategory
+        page:        1
+    requirements:
+        id: \d*
+
+blog_category:
+    path:      /category/{id}
+    defaults:  { _controller: BlogBundle:Advert:category }
     requirements:
         id: \d+
 

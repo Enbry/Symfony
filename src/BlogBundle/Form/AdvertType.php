@@ -18,9 +18,14 @@ class AdvertType extends AbstractType
       ->add('title',     'text')
       ->add('author',    'text')
       ->add('content',   'textarea')
-      ->add('image',      new ImageType())
       ->add('categories', 'entity', array(
         'class'    => 'BlogBundle:Category',
+        'property' => 'name',
+        'multiple' => true,
+        'expanded' => false
+      ))
+      ->add('tags', 'entity', array(
+        'class'    => 'BlogBundle:Tag',
         'property' => 'name',
         'multiple' => true,
         'expanded' => false

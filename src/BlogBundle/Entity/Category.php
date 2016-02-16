@@ -6,7 +6,8 @@ namespace BlogBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="BlogBundle\Entity\CategoryRepository")
+ * @ORM\HasLifecycleCallbacks()
  */
 class Category
 {
@@ -21,6 +22,7 @@ class Category
    * @ORM\Column(name="name", type="string", length=255)
    */
   private $name;
+
 
   // Getters et setters
 
