@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use BlogBundle\Entity\Advert;
+use BlogBundle\Entity\Image;
 use BlogBundle\Form\AdvertType;
 use BlogBundle\Form\AdvertEditType;
 use BlogBundle\Entity\Category;
@@ -208,6 +209,7 @@ class AdvertController extends Controller
     $form = $this->createForm(new AdvertType(), $advert);
 
     if ($form->handleRequest($request)->isValid()) {
+      $advert->getImage()->upload();
       $em = $this->getDoctrine()->getManager();
       $em->persist($advert);
       $em->flush();
@@ -258,7 +260,10 @@ class AdvertController extends Controller
 
    $form = $this->createForm(new AdvertEditType(), $advert);
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/master
     if ($form->handleRequest($request)->isValid()) {
 
       $em->flush();
